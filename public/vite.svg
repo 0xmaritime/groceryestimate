@@ -1,0 +1,27 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="48" fill="#f0f9ff" stroke="#3b82f6" stroke-width="2"/>
+  
+  <!-- Store icon - simplified building -->
+  <rect x="30" y="35" width="40" height="35" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+  
+  <!-- Store roof -->
+  <polygon points="25,35 50,20 75,35" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+  
+  <!-- Door -->
+  <rect x="43" y="55" width="14" height="15" fill="#dbeafe"/>
+  
+  <!-- Money/profit indicator -->
+  <circle cx="70" cy="70" r="20" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  
+  <!-- Dollar sign -->
+  <path d="M70,55 v30 M65,60 h10 M65,80 h10" stroke="#16a34a" stroke-width="3" stroke-linecap="round"/>
+  
+  <!-- Chart/analysis element -->
+  <rect x="25" y="75" width="25" height="5" fill="#3b82f6"/>
+  <rect x="25" y="65" width="20" height="5" fill="#3b82f6"/>
+  <rect x="25" y="55" width="10" height="5" fill="#3b82f6"/>
+  
+  <!-- Connecting lines -->
+  <line x1="25" y1="80" x2="25" y2="55" stroke="#64748b" stroke-width="1"/>
+</svg>
