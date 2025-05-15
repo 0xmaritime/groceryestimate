@@ -1,11 +1,11 @@
 import React from 'react';
-import GroceryStoreAnalyzer from './components/GroceryStoreAnalyzer';
+import GroceryStoreDashboard from './components/GroceryStoreDashboard';
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-100">
-      <GroceryStoreAnalyzer />
-    </div>
+    <>
+      <GroceryStoreDashboard />
+    </>
   );
 }
 
