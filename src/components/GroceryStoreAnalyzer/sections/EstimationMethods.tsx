@@ -3,12 +3,98 @@ import { Clock, TrendingUp } from 'lucide-react';
 import { methodsData } from '../data';
 import { PhaseIcon } from '../components/PhaseIcon';
 import { MethodIcon } from '../components/MethodIcon';
+import { useGroceryStore } from '../../../context/GroceryStoreContext'; // Import the context hook
 
 const EstimationMethods: React.FC = () => {
+  const { 
+    selectedMethodsForComparison, 
+    setSelectedMethodsForComparison,
+    methodEstimates 
+  } = useGroceryStore();
+
+  const handleMethodToggle = (methodName: string) => {
+    setSelectedMethodsForComparison((prevSelected: string[]) =>
+      prevSelected.includes(methodName)
+        ? prevSelected.filter((name: string) => name !== methodName)
+        : [...prevSelected, methodName]
+    );
+  };
+
   return (
     <div className="space-y-4">
       <p>A powerful aspect of my approach is using multiple independent estimation methods to triangulate results, increasing confidence through methodological diversity.</p>
-      
+
+      <div className="bg-white p-4 rounded-lg border">
+        <h3 className="text-lg font-semibold mb-4">Select Methods for Comparison</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {methodsData.map((method, index) => (
+            <div key={index} className="flex items-center space-x-2 border rounded-lg p-3">
+              <input
+                type="checkbox"
+                id={`method-${method.name}`}
+                checked={selectedMethodsForComparison.includes(method.name)}
+                onChange={() => handleMethodToggle(method.name)}
+                className="form-checkbox h-5 w-5 text-blue-600"
+              />
+              <label htmlFor={`method-${method.name}`} className="flex items-center space-x-2 cursor-pointer">
+                <MethodIcon name={method.name} />
+                <span className="text-lg font-semibold">{method.name}</span>
+              </label>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {selectedMethodsForComparison.length > 0 && (
+        <div className="bg-white p-4 rounded-lg border">
+          <h3 className="text-lg font-semibold mb-4">Method Comparison</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <h4 className="font-medium mb-2">Revenue Estimates (€)</h4>
+              <ul className="space-y-2">
+                {methodEstimates
+                  .filter(est => selectedMethodsForComparison.includes(est.name))
+                  .map(est => (
+                    <li key={est.name} className="flex justify-between items-center">
+                      <span className="font-medium">{est.name}</span>
+                      <span className="text-blue-600">
+                        {new Intl.NumberFormat('en-US', {
+                          style: 'currency',
+                          currency: 'EUR',
+                          maximumFractionDigits: 0
+                        }).format(est.revenue)}
+                      </span>
+                    </li>
+                  ))}
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-medium mb-2">Method Comparison</h4>
+              <div className="h-64">
+                {/* Simple bar chart visualization would go here */}
+                <div className="flex items-end h-48 gap-2 mt-4">
+                  {methodEstimates
+                    .filter(est => selectedMethodsForComparison.includes(est.name))
+                    .map(est => {
+                      const maxRevenue = Math.max(...methodEstimates.map(m => m.revenue));
+                      const height = (est.revenue / maxRevenue) * 100;
+                      return (
+                        <div key={est.name} className="flex-1 flex flex-col items-center">
+                          <div 
+                            className="w-full bg-blue-500 rounded-t"
+                            style={{ height: `${height}%` }}
+                          />
+                          <span className="text-xs mt-1 text-center">{est.name}</span>
+                        </div>
+                      );
+                    })}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
         {methodsData.map((method, index) => (
           <div key={index} className="border rounded-lg p-4 bg-white">
@@ -16,7 +102,7 @@ const EstimationMethods: React.FC = () => {
               <MethodIcon name={method.name} />
               <h3 className="text-lg font-semibold">{method.name}</h3>
             </div>
-            
+
             <div className="flex items-center space-x-2 text-sm">
               <PhaseIcon phase={method.phase} />
               <span>Phase {method.phase}</span>
@@ -27,7 +113,7 @@ const EstimationMethods: React.FC = () => {
               <TrendingUp className="h-4 w-4 text-gray-500" />
               <span>±{100-method.accuracy}% margin</span>
             </div>
-            
+
             {method.name === 'Catchment Area' && (
               <div className="mt-3">
                 <p className="text-sm">Establishes theoretical market ceiling based on:</p>
@@ -37,7 +123,7 @@ const EstimationMethods: React.FC = () => {
                 <p className="text-xs mt-2 text-gray-600">Uses census data and competitive positioning to estimate market share</p>
               </div>
             )}
-            
+
             {method.name === 'Checkout Capacity' && (
               <div className="mt-3">
                 <p className="text-sm">Calculates operational throughput ceiling:</p>
@@ -47,7 +133,7 @@ const EstimationMethods: React.FC = () => {
                 <p className="text-xs mt-2 text-gray-600">Accounts for 1 cashier + 4 self-checkout lanes with efficiency factors</p>
               </div>
             )}
-            
+
             {method.name === 'Direct Observation' && (
               <div className="mt-3">
                 <p className="text-sm">Measures actual customer behavior:</p>
@@ -57,7 +143,7 @@ const EstimationMethods: React.FC = () => {
                 <p className="text-xs mt-2 text-gray-600">Based on 6 strategic observation periods covering different days/times</p>
               </div>
             )}
-            
+
             {method.name === 'Staff Productivity' && (
               <div className="mt-3">
                 <p className="text-sm">Uses labor as efficiency proxy:</p>
@@ -67,7 +153,7 @@ const EstimationMethods: React.FC = () => {
                 <p className="text-xs mt-2 text-gray-600">Based on observed staffing levels and industry productivity benchmarks</p>
               </div>
             )}
-            
+
             {method.name === 'Supply Chain' && (
               <div className="mt-3">
                 <p className="text-sm">Reverse-engineers from delivery volume:</p>
@@ -77,7 +163,7 @@ const EstimationMethods: React.FC = () => {
                 <p className="text-xs mt-2 text-gray-600">Accounts for inventory turnover rates typical in discount grocery (20-26× annually)</p>
               </div>
             )}
-            
+
             {method.name === 'Triangulation' && (
               <div className="mt-3">
                 <p className="text-sm">Weighted combination of all methods:</p>
@@ -90,47 +176,49 @@ const EstimationMethods: React.FC = () => {
           </div>
         ))}
       </div>
-      
-      <h3 className="text-lg font-semibold mt-6">From Revenue to Profit</h3>
-      <p>Once monthly revenue is established through multiple methods, I convert to profit using:</p>
-      
-      <div className="bg-white border rounded-lg p-4 my-4">
-        <h4 className="font-semibold">Standard Discount Grocery P&L Structure</h4>
-        <table className="w-full mt-2">
-          <tbody>
-            <tr className="border-b">
-              <td className="py-2 font-semibold">Revenue</td>
-              <td className="py-2 text-right">100%</td>
-            </tr>
-            <tr className="border-b bg-red-50">
-              <td className="py-2 pl-4">Cost of Goods Sold (COGS)</td>
-              <td className="py-2 text-right">80-84%</td>
-            </tr>
-            <tr className="border-b">
-              <td className="py-2 font-semibold">Gross Profit</td>
-              <td className="py-2 text-right">16-20%</td>
-            </tr>
-            <tr className="border-b bg-blue-50">
-              <td className="py-2 pl-4">Labor Costs</td>
-              <td className="py-2 text-right">8-10%</td>
-            </tr>
-            <tr className="border-b bg-yellow-50">
-              <td className="py-2 pl-4">Occupancy Costs (Rent, Utilities)</td>
-              <td className="py-2 text-right">3-4%</td>
-            </tr>
-            <tr className="border-b bg-purple-50">
-              <td className="py-2 pl-4">Other Operating Expenses</td>
-              <td className="py-2 text-right">3-5%</td>
-            </tr>
-            <tr className="bg-green-50">
-              <td className="py-2 font-semibold">Net Profit</td>
-              <td className="py-2 text-right">1-2.5%</td>
-            </tr>
-          </tbody>
-        </table>
-        <p className="text-xs mt-2 text-gray-600">Figures based on discount grocery industry benchmarks and published financial data</p>
+
+      <div className="bg-white p-4 rounded-lg border">
+        <h3 className="text-lg font-semibold mb-4">From Revenue to Profit</h3>
+        <p>Once monthly revenue is established through multiple methods, I convert to profit using:</p>
+
+        <div className="bg-white border rounded-lg p-4 my-4">
+          <h4 className="font-semibold">Standard Discount Grocery P&L Structure</h4>
+          <table className="w-full mt-2">
+            <tbody>
+              <tr className="border-b">
+                <td className="py-2 font-semibold">Revenue</td>
+                <td className="py-2 text-right">100%</td>
+              </tr>
+              <tr className="border-b bg-red-50">
+                <td className="py-2 pl-4">Cost of Goods Sold (COGS)</td>
+                <td className="py-2 text-right">80-84%</td>
+              </tr>
+              <tr className="border-b">
+                <td className="py-2 font-semibold">Gross Profit</td>
+                <td className="py-2 text-right">16-20%</td>
+              </tr>
+              <tr className="border-b bg-blue-50">
+                <td className="py-2 pl-4">Labor Costs</td>
+                <td className="py-2 text-right">8-10%</td>
+              </tr>
+              <tr className="border-b bg-yellow-50">
+                <td className="py-2 pl-4">Occupancy Costs (Rent, Utilities)</td>
+                <td className="py-2 text-right">3-4%</td>
+              </tr>
+              <tr className="border-b bg-purple-50">
+                <td className="py-2 pl-4">Other Operating Expenses</td>
+                <td className="py-2 text-right">3-5%</td>
+              </tr>
+              <tr className="bg-green-50">
+                <td className="py-2 font-semibold">Net Profit</td>
+                <td className="py-2 text-right">1-2.5%</td>
+              </tr>
+            </tbody>
+          </table>
+          <p className="text-xs mt-2 text-gray-600">Figures based on discount grocery industry benchmarks and published financial data</p>
+        </div>
       </div>
-      
+
       <div className="bg-gray-100 p-4 rounded-lg">
         <h3 className="text-lg font-semibold">Method Triangulation Strategy</h3>
         <p>The power of multiple methods lies in their different blind spots and biases:</p>

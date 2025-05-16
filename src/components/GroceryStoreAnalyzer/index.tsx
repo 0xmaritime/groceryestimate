@@ -12,6 +12,7 @@ import TaskSection from './sections/TaskSection';
 import { Section } from './components/Section';
 
 type ExpandedSections = {
+  [key: string]: boolean;
   task: boolean;
   introduction: boolean;
   framework: boolean;
@@ -21,13 +22,11 @@ type ExpandedSections = {
   estimationMethods: boolean;
   visualization: boolean;
   conclusion: boolean;
-  [key: string]: boolean; // Add index signature
 };
 
 const GroceryStoreAnalyzer = () => {
-  // State for expanding/collapsing sections
   const [expandedSections, setExpandedSections] = useState<ExpandedSections>({
-    task: true, // Add task to expandedSections state
+    task: true,
     introduction: true,
     framework: false,
     phase1: false,
@@ -37,9 +36,6 @@ const GroceryStoreAnalyzer = () => {
     visualization: true,
     conclusion: false
   });
-
-  // State for selected approach
-  const [selectedApproach, setSelectedApproach] = useState('balanced');
 
   const toggleSection = (section: string) => {
     setExpandedSections({
@@ -52,18 +48,16 @@ const GroceryStoreAnalyzer = () => {
     <div className="p-4 max-w-6xl mx-auto bg-gray-50 min-h-screen">
       <h1 className="text-3xl font-bold text-center mb-6">Grocery Store Profit Estimation Framework</h1>
       
-      {/* Task Section */}
       <Section
         title="Task"
-        icon={<ClipboardList className="text-blue-500" />} // Add ClipboardList icon
-        isExpanded={expandedSections.task} // Use state for expanded status
+        icon={<ClipboardList className="text-blue-500" />}
+        isExpanded={expandedSections.task}
         toggleFunc={toggleSection}
         id="task"
       >
         <TaskSection />
       </Section>
 
-      {/* Introduction */}
       <Section 
         title="Introduction: My Approach to Estimating Store Profit" 
         icon={<CircleDollarSign className="text-blue-500" />}
@@ -74,7 +68,6 @@ const GroceryStoreAnalyzer = () => {
         <Introduction />
       </Section>
       
-      {/* Framework Overview */}
       <Section 
         title="Analytical Framework: The Three-Phase Intelligence Funnel" 
         icon={<Activity className="text-purple-500" />}
@@ -85,7 +78,6 @@ const GroceryStoreAnalyzer = () => {
         <Framework />
       </Section>
       
-      {/* Phase 1 */}
       <Section 
         title="Phase 1: Rapid Baseline Estimation" 
         icon={<Clock className="text-blue-500" />}
@@ -96,7 +88,6 @@ const GroceryStoreAnalyzer = () => {
         <Phase1 />
       </Section>
       
-      {/* Phase 2 */}
       <Section 
         title="Phase 2: Operational Intelligence" 
         icon={<Activity className="text-orange-500" />}
@@ -107,7 +98,6 @@ const GroceryStoreAnalyzer = () => {
         <Phase2 />
       </Section>
       
-      {/* Phase 3 */}
       <Section 
         title="Phase 3: Refinement and Validation" 
         icon={<Clock className="text-green-500" />}
@@ -118,7 +108,6 @@ const GroceryStoreAnalyzer = () => {
         <Phase3 />
       </Section>
       
-      {/* Estimation Methods */}
       <Section 
         title="Multiple Estimation Methods" 
         icon={<Activity className="text-purple-500" />}
@@ -129,7 +118,6 @@ const GroceryStoreAnalyzer = () => {
         <EstimationMethods />
       </Section>
       
-      {/* Interactive Visualization */}
       <Section 
         title="Interactive Exploration" 
         icon={<Activity className="text-green-500" />}
@@ -137,13 +125,9 @@ const GroceryStoreAnalyzer = () => {
         toggleFunc={toggleSection}
         id="visualization"
       >
-        <Visualization 
-          selectedApproach={selectedApproach}
-          setSelectedApproach={setSelectedApproach}
-        />
+        <Visualization />
       </Section>
       
-      {/* Conclusion */}
       <Section 
         title="Conclusion and Recommendation" 
         icon={<CircleDollarSign className="text-green-500" />}

@@ -25,8 +25,19 @@ export const profitBreakdownData = [
   { name: 'Net Profit', value: 2, color: '#2ecc71' }
 ];
 
+// Define a type for approachConfig with an index signature
+interface ApproachConfig {
+  [key: string]: {
+    time: string;
+    phases: string;
+    accuracy: string;
+    methods: string;
+    description: string;
+  };
+}
+
 // Config for different approaches
-export const approachConfig = {
+export const approachConfig: ApproachConfig = {
   quick: {
     time: '2-3 hours',
     phases: 'Phase 1 only',

@@ -1,19 +1,21 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import DashboardCard from './components/DashboardCard';
-import TaskSection from '../GroceryStoreAnalyzer/sections/TaskSection'; // Import the existing TaskSection
-import Introduction from '../GroceryStoreAnalyzer/sections/Introduction'; // Import the existing Introduction
-import Framework from '../GroceryStoreAnalyzer/sections/Framework'; // Import the existing Framework
-import Phase1 from '../GroceryStoreAnalyzer/sections/Phase1'; // Import the existing Phase1
-import Phase2 from '../GroceryStoreAnalyzer/sections/Phase2'; // Import the existing Phase2
-import Phase3 from '../GroceryStoreAnalyzer/sections/Phase3'; // Import the existing Phase3
+import TaskSection from '../GroceryStoreAnalyzer/sections/TaskSection';
+import Introduction from '../GroceryStoreAnalyzer/sections/Introduction'; 
+import Phase1 from '../GroceryStoreAnalyzer/sections/Phase1';
+import Phase2 from '../GroceryStoreAnalyzer/sections/Phase2';
+import Phase3 from '../GroceryStoreAnalyzer/sections/Phase3';
 import EstimationMethods from '../GroceryStoreAnalyzer/sections/EstimationMethods'; // Import the existing EstimationMethods
 import Visualization from '../GroceryStoreAnalyzer/sections/Visualization'; // Import the existing Visualization
 import Conclusion from '../GroceryStoreAnalyzer/sections/Conclusion'; // Import the existing Conclusion
 import ApproachSelector from './components/ApproachSelector'; // Import the new ApproachSelector
+import ResultsDisplay from './components/ResultsDisplay'; // Import the new ResultsDisplay
+import ProcessPipeline from './components/ProcessPipeline'; // Import the new ProcessPipeline
+import { useGroceryStore } from '../../context/GroceryStoreContext'; // Import the context hook
 
 const GroceryStoreDashboard = () => {
   const [activeTab, setActiveTab] = useState('task'); // Default to the task tab
-  const [selectedApproach, setSelectedApproach] = useState('balanced'); // State for selected approach
+  const { selectedApproach, setSelectedApproach } = useGroceryStore(); // Use context for selectedApproach
 
   const renderContent = () => {
     switch (activeTab) {
@@ -31,9 +33,7 @@ const GroceryStoreDashboard = () => {
         );
       case 'framework':
         return (
-          <DashboardCard title="Analytical Framework: The Three-Phase Intelligence Funnel">
-            <Framework />
-          </DashboardCard>
+          <ProcessPipeline /> // Render ProcessPipeline for Framework tab
         );
       case 'phase1':
         return (
@@ -62,10 +62,8 @@ const GroceryStoreDashboard = () => {
       case 'visualization':
         return (
           <DashboardCard title="Interactive Exploration">
-            <Visualization
-              selectedApproach={selectedApproach}
-              setSelectedApproach={setSelectedApproach}
-            />
+            {/* Use context directly in Visualization */}
+            <Visualization />
           </DashboardCard>
         );
       case 'conclusion':
@@ -73,6 +71,10 @@ const GroceryStoreDashboard = () => {
           <DashboardCard title="Conclusion and Recommendation">
             <Conclusion />
           </DashboardCard>
+        );
+      case 'results': // Add new case for results tab
+        return (
+          <ResultsDisplay />
         );
       default:
         return <DashboardCard title="Welcome">Select a tab from the left.</DashboardCard>;
@@ -85,6 +87,7 @@ const GroceryStoreDashboard = () => {
       <header className="bg-white shadow p-4 flex items-center justify-between">
         <h1 className="text-xl font-bold">Grocery Store Profit Dashboard</h1>
         {/* Approach Selector */}
+        {/* Pass selectedApproach and setSelectedApproach from context */}
         <ApproachSelector
           selectedApproach={selectedApproach}
           setSelectedApproach={setSelectedApproach}
@@ -96,7 +99,7 @@ const GroceryStoreDashboard = () => {
         {/* Tab Navigation */}
         <nav className="w-64 bg-gray-800 text-white p-4">
           <ul>
-            {['task', 'introduction', 'framework', 'phase1', 'phase2', 'phase3', 'estimationMethods', 'visualization', 'conclusion'].map(tab => (
+            {['task', 'introduction', 'framework', 'phase1', 'phase2', 'phase3', 'estimationMethods', 'visualization', 'conclusion', 'results'].map(tab => ( // Add 'results' to the tab list
               <li key={tab} className="mb-2">
                 <button
                   className={`w-full text-left py-2 px-4 rounded ${activeTab === tab ? 'bg-blue-600' : 'hover:bg-gray-700'}`}
